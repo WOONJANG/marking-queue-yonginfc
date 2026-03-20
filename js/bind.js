@@ -1,0 +1,207 @@
+(function () {
+  var tokenField = document.getElementById('tokenField');
+  var phone = document.getElementById('phone');
+  var agreeCheckbox = document.getElementById('agreeCheckbox');
+  var agreeField = document.getElementById('agreeField');
+  var bindForm = document.getElementById('bindForm');
+  var bindSubmitBtn = document.getElementById('bindSubmitBtn');
+  var bindMsg = document.getElementById('bindMsg');
+  var infoWorkNo = document.getElementById('infoWorkNo');
+  var infoStatus = document.getElementById('infoStatus');
+  var infoClaim = document.getElementById('infoClaim');
+
+  var bindPollingTimer = null;
+  var bindPollingStartedAt = 0;
+  var bindCompleted = false;
+
+  function normalizeDigits(value) {
+    return String(value == null ? '' : value).replace(/\D/g, '');
+  }
+
+  function normalizeToken(value) {
+    return String(value == null ? '' : value).trim().replace(/[^A-Za-z0-9_-]/g, '');
+  }
+
+  function getToken() {
+    var params = new URLSearchParams(location.search);
+    var fromUrl = normalizeToken(params.get('k') || params.get('token') || '');
+    var saved = normalizeToken(sessionStorage.getItem('bindToken') || '');
+    var token = fromUrl || saved || '';
+
+    if (fromUrl) {
+      sessionStorage.setItem('bindToken', fromUrl);
+      history.replaceState({}, '', location.pathname);
+    }
+
+    return token;
+  }
+
+  function showMessage(text, ok) {
+    bindMsg.textContent = text || '';
+    bindMsg.className = 'msg' + (text ? ' ' + (ok ? 'ok' : 'err') : '');
+  }
+
+  function applyTaskInfo(task) {
+    infoWorkNo.textContent = '#' + (task.workNo || '-');
+    infoStatus.textContent = task.status || '-';
+    infoClaim.textContent = task.claimStatus || '-';
+  }
+
+  function isBoundTask(task) {
+    if (!task) return false;
+    return (
+      task.claimStatus === '연결됨' ||
+      task.claimStatus === 'BOUND' ||
+      task.claimStatus === 'bound'
+    );
+  }
+
+  function stopBindPolling() {
+    if (bindPollingTimer) {
+      clearInterval(bindPollingTimer);
+      bindPollingTimer = null;
+    }
+  }
+
+  function goToPublicPage(workNo) {
+    var q = encodeURIComponent(String(workNo || ''));
+    setTimeout(function () {
+      location.href = './?q=' + q;
+    }, 800);
+  }
+
+  function completeBindUI(task, message) {
+    bindCompleted = true;
+    stopBindPolling();
+    applyTaskInfo(task || {});
+    showMessage(message || '연결이 완료되었습니다.', true);
+    bindSubmitBtn.disabled = false;
+    if (task && task.workNo) {
+      goToPublicPage(task.workNo);
+    }
+  }
+
+  function failBindUI(message) {
+    stopBindPolling();
+    showMessage(message || '연결에 실패했습니다.', false);
+    bindSubmitBtn.disabled = false;
+  }
+
+  function fetchTaskInfo() {
+    var token = getToken();
+    if (!token) {
+      return Promise.reject(new Error('유효하지 않은 QR 링크입니다.'));
+    }
+    return AppApi.jsonp({ mode: 'taskInfo', k: token });
+  }
+
+  function startBindPolling() {
+    stopBindPolling();
+    bindPollingStartedAt = Date.now();
+
+    bindPollingTimer = setInterval(function () {
+      if (bindCompleted) return;
+
+      fetchTaskInfo()
+        .then(function (res) {
+          if (!res || !res.success || !res.task) return;
+
+          applyTaskInfo(res.task);
+
+          if (isBoundTask(res.task)) {
+            completeBindUI(res.task, '등록이 완료되었습니다.');
+            return;
+          }
+
+          if (Date.now() - bindPollingStartedAt > 12000) {
+            failBindUI('처리는 되었을 수 있지만 응답 확인이 지연되고 있습니다. 새로고침 후 다시 확인해주세요.');
+          }
+        })
+        .catch(function () {
+          if (Date.now() - bindPollingStartedAt > 12000) {
+            failBindUI('처리는 되었을 수 있지만 응답 확인에 실패했습니다. 새로고침 후 다시 확인해주세요.');
+          }
+        });
+    }, 800);
+  }
+
+  function loadTaskInfo() {
+    var token = getToken();
+    if (!token) {
+      showMessage('유효하지 않은 QR 링크입니다.', false);
+      bindSubmitBtn.disabled = true;
+      return;
+    }
+
+    tokenField.value = token;
+    AppApi.setBindFormAction(bindForm);
+
+    fetchTaskInfo()
+      .then(function (res) {
+        if (!res || !res.success || !res.task) {
+          throw new Error((res && res.message) || '작업 정보를 찾을 수 없습니다.');
+        }
+
+        applyTaskInfo(res.task);
+
+        if (!res.task.canBind) {
+          bindSubmitBtn.disabled = true;
+          showMessage('현재 이 작업번호는 이미 사용 중이거나 완료 상태입니다. 관리자에게 문의하세요.', false);
+        }
+      })
+      .catch(function (err) {
+        bindSubmitBtn.disabled = true;
+        showMessage(err.message || '작업 정보를 불러오지 못했습니다.', false);
+      });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    var token = getToken();
+    var normalizedPhone = normalizeDigits(phone.value);
+
+    tokenField.value = token;
+    phone.value = normalizedPhone;
+    agreeField.value = agreeCheckbox.checked ? 'Y' : 'N';
+
+    if (!token) {
+      showMessage('QR 토큰이 올바르지 않습니다.', false);
+      return;
+    }
+
+    if (!normalizedPhone) {
+      showMessage('휴대전화 번호를 입력하세요.', false);
+      phone.focus();
+      return;
+    }
+
+    if (!agreeCheckbox.checked) {
+      showMessage('개인정보 이용 동의가 필요합니다.', false);
+      return;
+    }
+
+    bindCompleted = false;
+    showMessage('연결 처리 중입니다...', true);
+    bindSubmitBtn.disabled = true;
+
+    bindForm.submit();
+    startBindPolling();
+  }
+
+  window.addEventListener('message', function (event) {
+    var data = event && event.data;
+    if (!data || typeof data !== 'object') return;
+
+    if (data.success) {
+      completeBindUI(data.task || {}, data.message || '연결이 완료되었습니다.');
+    } else {
+      failBindUI(data.message || '연결에 실패했습니다.');
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    bindForm.addEventListener('submit', handleSubmit);
+    loadTaskInfo();
+  });
+})();
