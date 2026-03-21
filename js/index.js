@@ -1,4 +1,7 @@
 (function() {
+    /* =========================
+       01. DOM 참조 / 전역 상태
+       ========================= */
     var searchInput = document.getElementById('searchInput');
     var searchBtn = document.getElementById('searchBtn');
     var refreshBtn = document.getElementById('refreshBtn');
@@ -26,11 +29,17 @@
     var currentMode = 'workNo';
     var currentStatusFilter = 'all';
 
+    /* =========================
+       02. URL / 관리자 이동
+       ========================= */
+
+    // 현재 URL의 쿼리값 읽기
     function getQueryValue(name) {
         var params = new URLSearchParams(location.search);
         return params.get(name) || '';
     }
 
+    // config.js의 API_BASE 기준으로 관리자 주소 생성
     function getAdminUrl() {
         var base = '';
 
@@ -43,6 +52,7 @@
         return base + (base.indexOf('?') === -1 ? '?page=admin' : '&page=admin');
     }
 
+    // 관리자 트리거 5회 클릭 시 관리자 페이지 이동
     function handleAdminTriggerClick() {
         adminClickCount += 1;
 
@@ -68,6 +78,7 @@
         }
     }
 
+    // 현재 검색어/상태필터를 URL에 반영
     function setQueryState(value) {
         var url = new URL(location.href);
 
@@ -83,6 +94,11 @@
         history.replaceState({}, '', url.toString());
     }
 
+    /* =========================
+       03. 공통 유틸
+       ========================= */
+
+    // HTML 출력용 이스케이프
     function escapeHtml(str) {
         return String(str || '')
             .replace(/&/g, '&amp;')
@@ -92,25 +108,30 @@
             .replace(/'/g, '&#39;');
     }
 
+    // 숫자만 남기기
     function normalizeDigits(value) {
         return String(value == null ? '' : value).replace(/\D/g, '');
     }
 
+    // 작업번호는 4자리까지만 사용
     function normalizeWorkNo(value) {
         var digits = normalizeDigits(value);
         if (!digits) return '';
         return digits.slice(0, 4);
     }
 
+    // 전화번호 검색은 숫자 11자리까지만 사용
     function normalizePhoneQuery(value) {
         return normalizeDigits(value).slice(0, 11);
     }
 
+    // 작업번호 정렬용 숫자값
     function workNoSortValue(value) {
         var digits = normalizeDigits(value);
         return digits ? parseInt(digits, 10) : Number.MAX_SAFE_INTEGER;
     }
 
+    // 작업번호 오름차순 정렬
     function sortByWorkNoAsc(items) {
         return (items || []).slice().sort(function(a, b) {
             var av = workNoSortValue(a.workNo);
@@ -120,10 +141,15 @@
         });
     }
 
+    // 현재 검색창 값
     function getCurrentQuery() {
         return String(searchInput.value || '').trim();
     }
 
+    // 검색어 형태에 따라 검색 모드 판단
+    // - workNo: 작업번호
+    // - name: 이름
+    // - phone: 전화번호
     function inferSearchMode(query) {
         var raw = String(query || '').trim();
         var digits = normalizeDigits(raw);
@@ -138,6 +164,11 @@
         return 'workNo';
     }
 
+    /* =========================
+       04. 통계
+       ========================= */
+
+    // 아이템 목록 기준 통계 계산
     function buildStatsFromItems(items) {
         var list = items || [];
         var stats = {
@@ -156,6 +187,7 @@
         return stats;
     }
 
+    // 통계 숫자 DOM 반영
     function renderStats(stats) {
         stats = stats || {};
         if (statTotal) statTotal.textContent = String(stats.total || 0);
@@ -164,12 +196,18 @@
         if (statBound) statBound.textContent = String(stats.bound || 0);
     }
 
+    /* =========================
+       05. 상태 필터
+       ========================= */
+
+    // 상태 필터 버튼 active 표시
     function renderFilterButtons() {
         filterAllBtn.classList.toggle('active', currentStatusFilter === 'all');
         filterWaitingBtn.classList.toggle('active', currentStatusFilter === 'waiting');
         filterCompleteBtn.classList.toggle('active', currentStatusFilter === 'complete');
     }
 
+    // 상태 필터 변경 후 재조회
     function setStatusFilter(filter) {
         currentStatusFilter = filter;
         renderFilterButtons();
@@ -177,6 +215,11 @@
         loadByCurrentQuery();
     }
 
+    /* =========================
+       06. 목록 렌더링
+       ========================= */
+
+    // 테이블/모바일 카드 공통 렌더링
     function render(items) {
         var sorted = sortByWorkNoAsc(items);
 
@@ -213,6 +256,11 @@
         }).join('');
     }
 
+    /* =========================
+       07. 로컬 검색
+       ========================= */
+
+    // 작업번호는 캐시 데이터에서 로컬 검색
     function applyLocalWorkNoSearch() {
         var q = normalizeWorkNo(getCurrentQuery());
 
@@ -232,6 +280,11 @@
         syncNote.textContent = '작업번호 로컬 검색 · 데이터 자동 갱신 10초';
     }
 
+    /* =========================
+       08. 기본 데이터 로드
+       ========================= */
+
+    // 전체 목록/통계 캐시 갱신
     function loadBaseData() {
         return AppApi.jsonp({
                 mode: 'public',
@@ -252,6 +305,11 @@
             });
     }
 
+    /* =========================
+       09. 서버 검색
+       ========================= */
+
+    // 이름/전화번호는 서버 검색
     function runServerSearch(mode) {
         var q = getCurrentQuery();
 
@@ -287,6 +345,11 @@
             });
     }
 
+    /* =========================
+       10. 검색 실행
+       ========================= */
+
+    // 현재 검색어 기준으로 로컬/서버 검색 분기
     function loadByCurrentQuery() {
         var q = getCurrentQuery();
         currentMode = inferSearchMode(q);
@@ -300,11 +363,18 @@
         return runServerSearch(currentMode);
     }
 
+    // 수동 검색 시 짧은 디바운스 적용
     function handleManualSearch() {
         if (serverSearchTimer) clearTimeout(serverSearchTimer);
         serverSearchTimer = setTimeout(loadByCurrentQuery, 120);
     }
 
+    /* =========================
+       11. 자동 갱신
+       ========================= */
+
+    // 10초마다 기본 데이터 갱신
+    // 이름/전화번호 모드면 서버 검색도 다시 실행
     function startAutoRefresh() {
         if (refreshTimer) clearInterval(refreshTimer);
 
@@ -321,7 +391,11 @@
         }, 10000);
     }
 
+    /* =========================
+       12. 초기 실행 / 이벤트 바인딩
+       ========================= */
     document.addEventListener('DOMContentLoaded', function() {
+        // URL 쿼리값으로 초기 검색어/필터 복원
         searchInput.value = getQueryValue('q') || '';
         currentStatusFilter = getQueryValue('status') || 'all';
 
@@ -331,6 +405,7 @@
 
         renderFilterButtons();
 
+        // 상태 필터 클릭
         filterAllBtn.addEventListener('click', function() {
             setStatusFilter('all');
         });
@@ -341,12 +416,15 @@
             setStatusFilter('complete');
         });
 
+        // 검색 버튼
         searchBtn.addEventListener('click', loadByCurrentQuery);
 
+        // 새로고침 버튼
         refreshBtn.addEventListener('click', function() {
             loadBaseData().then(loadByCurrentQuery);
         });
 
+        // 입력 시 검색 모드 자동 판단
         searchInput.addEventListener('input', function() {
             var mode = inferSearchMode(searchInput.value);
 
@@ -366,6 +444,7 @@
             setQueryState(searchInput.value);
         });
 
+        // 엔터 시 검색 실행
         searchInput.addEventListener('keydown', function(e) {
             if ((e.key || e.keyCode) === 'Enter' || (e.key || e.keyCode) === 13) {
                 e.preventDefault();
@@ -373,6 +452,7 @@
             }
         });
 
+        // 관리자 숨김 진입
         if (adminTrigger) {
             adminTrigger.addEventListener('click', handleAdminTriggerClick);
             adminTrigger.addEventListener('keydown', function(e) {
@@ -384,6 +464,7 @@
             });
         }
 
+        // 초기 데이터 로드 + 자동 갱신 시작
         loadBaseData().then(loadByCurrentQuery);
         startAutoRefresh();
     });
