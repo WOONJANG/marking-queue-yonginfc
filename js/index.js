@@ -28,6 +28,28 @@
     var serverSearchTimer = null;
     var currentMode = 'workNo';
     var currentStatusFilter = 'all';
+    var serverSearchRequestSeq = 0;
+
+    var requiredElementsReady =
+        searchInput &&
+        searchBtn &&
+        refreshBtn &&
+        queueBody &&
+        mobileList &&
+        updatedAt &&
+        syncNote &&
+        filterAllBtn &&
+        filterWaitingBtn &&
+        filterCompleteBtn &&
+        statTotal &&
+        statWaiting &&
+        statDone &&
+        statBound;
+
+    if (!requiredElementsReady) {
+        console.error('[index.js] 필수 요소를 찾을 수 없습니다.');
+        return;
+    }
 
     /* =========================
        02. URL / 관리자 이동
@@ -144,6 +166,18 @@
     // 현재 검색창 값
     function getCurrentQuery() {
         return String(searchInput.value || '').trim();
+    }
+
+    // 에러 메시지 렌더링
+    function renderError(message) {
+        var text = escapeHtml(message || '불러오기 실패');
+        queueBody.innerHTML = '<tr><td colspan="5" class="muted td-empty">' + text + '</td></tr>';
+        mobileList.innerHTML = '<div class="mobile-item muted">' + text + '</div>';
+    }
+
+    // 응답이 최신 요청인지 확인
+    function isLatestRequest(requestId) {
+        return requestId === serverSearchRequestSeq;
     }
 
     // 검색어 형태에 따라 검색 모드 판단
@@ -312,6 +346,7 @@
     // 이름/전화번호는 서버 검색
     function runServerSearch(mode) {
         var q = getCurrentQuery();
+        var requestId = ++serverSearchRequestSeq;
 
         if (mode === 'phone') {
             q = normalizePhoneQuery(q);
@@ -328,6 +363,7 @@
                 statusFilter: currentStatusFilter
             })
             .then(function(res) {
+                if (!isLatestRequest(requestId)) return;
                 if (!res || !res.success) {
                     throw new Error((res && res.message) || '검색 결과를 불러오지 못했습니다.');
                 }
@@ -338,8 +374,8 @@
                 syncNote.textContent = (mode === 'name' ? '이름' : '전화번호') + ' 서버 검색 · 데이터 자동 갱신 10초';
             })
             .catch(function(err) {
-                queueBody.innerHTML = '<tr><td colspan="5" class="muted td-empty">' + escapeHtml(err.message || '불러오기 실패') + '</td></tr>';
-                mobileList.innerHTML = '<div class="mobile-item muted">' + escapeHtml(err.message || '불러오기 실패') + '</div>';
+                if (!isLatestRequest(requestId)) return;
+                renderError(err.message || '불러오기 실패');
                 updatedAt.textContent = '-';
                 syncNote.textContent = '서버 검색 실패';
             });
@@ -356,6 +392,7 @@
         setQueryState(q);
 
         if (currentMode === 'workNo') {
+            serverSearchRequestSeq += 1;
             applyLocalWorkNoSearch();
             return Promise.resolve();
         }
@@ -385,8 +422,8 @@
                         return runServerSearch(currentMode);
                     }
                 })
-                .catch(function() {
-                    syncNote.textContent = '자동 갱신 중 오류가 발생했습니다.';
+                .catch(function(err) {
+                    syncNote.textContent = (err && err.message) ? err.message : '자동 갱신 중 오류가 발생했습니다.';
                 });
         }, 10000);
     }
@@ -421,7 +458,11 @@
 
         // 새로고침 버튼
         refreshBtn.addEventListener('click', function() {
-            loadBaseData().then(loadByCurrentQuery);
+            loadBaseData()
+                .then(loadByCurrentQuery)
+                .catch(function(err) {
+                    renderError((err && err.message) || '데이터를 불러오지 못했습니다.');
+                });
         });
 
         // 입력 시 검색 모드 자동 판단
@@ -431,6 +472,7 @@
             if (mode === 'workNo') {
                 searchInput.value = normalizeWorkNo(searchInput.value);
                 currentMode = 'workNo';
+                serverSearchRequestSeq += 1;
                 applyLocalWorkNoSearch();
                 setQueryState(searchInput.value);
                 return;
@@ -465,7 +507,12 @@
         }
 
         // 초기 데이터 로드 + 자동 갱신 시작
-        loadBaseData().then(loadByCurrentQuery);
+        loadBaseData()
+            .then(loadByCurrentQuery)
+            .catch(function(err) {
+                renderError((err && err.message) || '데이터를 불러오지 못했습니다.');
+            });
+
         startAutoRefresh();
     });
 })();
