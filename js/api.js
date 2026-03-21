@@ -9,6 +9,55 @@
         return String(base).trim().replace(/\/$/, '');
     }
 
+    // API_BASE를 URL 객체로 변환
+    function parseApiUrl() {
+        var base = ensureApiBase();
+        if (!base) return null;
+
+        try {
+            return new URL(base);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // API의 origin 반환
+    function getApiOrigin() {
+        var url = parseApiUrl();
+        return url ? url.origin : '';
+    }
+
+    // postMessage 검증용 허용 origin 목록 생성
+    function getAllowedMessageOrigins() {
+        var url = parseApiUrl();
+        var origins = [];
+        var seen = {};
+
+        function addOrigin(origin) {
+            if (!origin || seen[origin]) return;
+            seen[origin] = true;
+            origins.push(origin);
+        }
+
+        if (window.location && window.location.origin) {
+            addOrigin(window.location.origin);
+        }
+
+        if (url && url.origin) {
+            addOrigin(url.origin);
+
+            if (url.hostname === 'script.google.com') {
+                addOrigin('https://script.googleusercontent.com');
+            }
+
+            if (url.hostname === 'script.googleusercontent.com') {
+                addOrigin('https://script.google.com');
+            }
+        }
+
+        return origins;
+    }
+
     /* =========================
        02. 요청 URL 생성
        ========================= */
@@ -17,12 +66,14 @@
     function buildUrl(params) {
         var base = ensureApiBase();
         if (!base) throw new Error('APP_CONFIG.API_BASE 값이 비어 있습니다.');
+
         var query = [];
         Object.keys(params || {}).forEach(function(key) {
             if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
                 query.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
             }
         });
+
         return base + (query.length ? ('?' + query.join('&')) : '');
     }
 
@@ -36,42 +87,59 @@
             var callbackName = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
             var script = document.createElement('script');
             var timer = null;
+            var settled = false;
 
             params = params || {};
             params.callback = callbackName;
 
-            // 서버 응답 콜백
-            window[callbackName] = function(data) {
-                cleanup();
-                resolve(data || {});
-            };
-
-            // 타이머/콜백/script 정리
             function cleanup() {
-                if (timer) clearTimeout(timer);
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+
                 try {
                     delete window[callbackName];
                 } catch (e) {
                     window[callbackName] = undefined;
                 }
-                if (script && script.parentNode) script.parentNode.removeChild(script);
+
+                if (script && script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
             }
+
+            function finalize(fn, value) {
+                if (settled) return;
+                settled = true;
+                cleanup();
+                fn(value);
+            }
+
+            // 서버 응답 콜백
+            window[callbackName] = function(data) {
+                finalize(resolve, data || {});
+            };
 
             // script 로드 실패
             script.onerror = function() {
-                cleanup();
-                reject(new Error('네트워크 오류가 발생했습니다.'));
+                finalize(reject, new Error('네트워크 오류가 발생했습니다.'));
             };
 
             // 응답 시간 초과
             timer = setTimeout(function() {
-                cleanup();
-                reject(new Error('응답 시간이 초과되었습니다.'));
+                finalize(reject, new Error('응답 시간이 초과되었습니다.'));
             }, 8000);
 
-            // 요청 시작
-            script.src = buildUrl(params);
-            (document.body || document.documentElement).appendChild(script);
+            try {
+                script.src = buildUrl(params);
+            } catch (err) {
+                finalize(reject, err);
+                return;
+            }
+
+            script.async = true;
+            (document.head || document.body || document.documentElement).appendChild(script);
         });
     }
 
@@ -81,7 +149,12 @@
 
     // 바인드 폼의 action을 API_BASE로 설정
     function setBindFormAction(form) {
-        form.action = ensureApiBase();
+        if (!form) throw new Error('바인드 폼을 찾을 수 없습니다.');
+
+        var base = ensureApiBase();
+        if (!base) throw new Error('APP_CONFIG.API_BASE 값이 비어 있습니다.');
+
+        form.action = base;
     }
 
     /* =========================
@@ -92,6 +165,8 @@
     window.AppApi = {
         jsonp: jsonp,
         setBindFormAction: setBindFormAction,
-        buildUrl: buildUrl
+        buildUrl: buildUrl,
+        getApiOrigin: getApiOrigin,
+        getAllowedMessageOrigins: getAllowedMessageOrigins
     };
 })(window);
