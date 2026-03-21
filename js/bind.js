@@ -12,10 +12,31 @@
     var infoWorkNo = document.getElementById('infoWorkNo');
     var infoStatus = document.getElementById('infoStatus');
     var infoClaim = document.getElementById('infoClaim');
+    var bindTargetIframe = document.getElementById('bindTargetIframe');
 
     var bindPollingTimer = null;
     var bindPollingStartedAt = 0;
     var bindCompleted = false;
+    var bindPollingInFlight = false;
+    var bindRedirectTimer = null;
+    var allowedMessageOrigins = [];
+    var requiredElementsReady =
+        tokenField &&
+        phone &&
+        agreeCheckbox &&
+        agreeField &&
+        bindForm &&
+        bindSubmitBtn &&
+        bindMsg &&
+        infoWorkNo &&
+        infoStatus &&
+        infoClaim &&
+        bindTargetIframe;
+
+    if (!requiredElementsReady) {
+        console.error('[bind.js] 필수 요소를 찾을 수 없습니다.');
+        return;
+    }
 
     /* =========================
        02. 공통 유틸
@@ -29,6 +50,17 @@
     // 토큰 문자열 정리
     function normalizeToken(value) {
         return String(value == null ? '' : value).trim().replace(/[^A-Za-z0-9_-]/g, '');
+    }
+
+    // 휴대전화 번호 유효성 검사
+    function isValidPhone(value) {
+        return /^01\d{8,9}$/.test(String(value || ''));
+    }
+
+    // 허용 origin인지 확인
+    function isAllowedMessageOrigin(origin) {
+        if (!origin) return false;
+        return allowedMessageOrigins.indexOf(origin) !== -1;
     }
 
     /* =========================
@@ -84,9 +116,19 @@
     // 폴링 중지
     function stopBindPolling() {
         if (bindPollingTimer) {
-            clearInterval(bindPollingTimer);
+            clearTimeout(bindPollingTimer);
             bindPollingTimer = null;
         }
+        bindPollingInFlight = false;
+    }
+
+    // 다음 폴링 예약
+    function scheduleNextBindPoll() {
+        if (bindCompleted) return;
+
+        bindPollingTimer = setTimeout(function() {
+            pollBindStatus();
+        }, 800);
     }
 
     /* =========================
@@ -96,18 +138,26 @@
     // 연결 완료 후 공개 페이지로 이동
     function goToPublicPage(workNo) {
         var q = encodeURIComponent(String(workNo || ''));
-        setTimeout(function() {
+
+        if (bindRedirectTimer) {
+            clearTimeout(bindRedirectTimer);
+        }
+
+        bindRedirectTimer = setTimeout(function() {
             location.href = './?q=' + q;
         }, 800);
     }
 
     // 연결 완료 UI 처리
     function completeBindUI(task, message) {
+        if (bindCompleted) return;
+
         bindCompleted = true;
         stopBindPolling();
         applyTaskInfo(task || {});
         showMessage(message || '연결이 완료되었습니다.', true);
-        bindSubmitBtn.disabled = false;
+        bindSubmitBtn.disabled = true;
+
         if (task && task.workNo) {
             goToPublicPage(task.workNo);
         }
@@ -130,6 +180,7 @@
         if (!token) {
             return Promise.reject(new Error('유효하지 않은 QR 링크입니다.'));
         }
+
         return AppApi.jsonp({
             mode: 'taskInfo',
             k: token
@@ -140,35 +191,57 @@
        08. 바인드 상태 폴링
        ========================= */
 
+    // 연결 완료 여부를 한 번 조회
+    function pollBindStatus() {
+        if (bindCompleted) return;
+
+        if (Date.now() - bindPollingStartedAt > 12000) {
+            failBindUI('처리는 되었을 수 있지만 응답 확인이 지연되고 있습니다. 새로고침 후 다시 확인해주세요.');
+            return;
+        }
+
+        if (bindPollingInFlight) {
+            scheduleNextBindPoll();
+            return;
+        }
+
+        bindPollingInFlight = true;
+
+        fetchTaskInfo()
+            .then(function(res) {
+                if (bindCompleted) return;
+                if (!res || !res.success || !res.task) return;
+
+                applyTaskInfo(res.task);
+
+                if (isBoundTask(res.task)) {
+                    completeBindUI(res.task, '등록이 완료되었습니다.');
+                    return;
+                }
+
+                scheduleNextBindPoll();
+            })
+            .catch(function() {
+                if (bindCompleted) return;
+
+                if (Date.now() - bindPollingStartedAt > 12000) {
+                    failBindUI('처리는 되었을 수 있지만 응답 확인에 실패했습니다. 새로고침 후 다시 확인해주세요.');
+                    return;
+                }
+
+                scheduleNextBindPoll();
+            })
+            .finally(function() {
+                bindPollingInFlight = false;
+            });
+    }
+
     // 연결 완료 여부를 주기적으로 확인
     function startBindPolling() {
         stopBindPolling();
         bindPollingStartedAt = Date.now();
-
-        bindPollingTimer = setInterval(function() {
-            if (bindCompleted) return;
-
-            fetchTaskInfo()
-                .then(function(res) {
-                    if (!res || !res.success || !res.task) return;
-
-                    applyTaskInfo(res.task);
-
-                    if (isBoundTask(res.task)) {
-                        completeBindUI(res.task, '등록이 완료되었습니다.');
-                        return;
-                    }
-
-                    if (Date.now() - bindPollingStartedAt > 12000) {
-                        failBindUI('처리는 되었을 수 있지만 응답 확인이 지연되고 있습니다. 새로고침 후 다시 확인해주세요.');
-                    }
-                })
-                .catch(function() {
-                    if (Date.now() - bindPollingStartedAt > 12000) {
-                        failBindUI('처리는 되었을 수 있지만 응답 확인에 실패했습니다. 새로고침 후 다시 확인해주세요.');
-                    }
-                });
-        }, 800);
+        bindPollingInFlight = false;
+        scheduleNextBindPoll();
     }
 
     /* =========================
@@ -198,7 +271,10 @@
                 if (!res.task.canBind) {
                     bindSubmitBtn.disabled = true;
                     showMessage('현재 이 작업번호는 이미 사용 중이거나 완료 상태입니다. 관리자에게 문의하세요.', false);
+                    return;
                 }
+
+                bindSubmitBtn.disabled = false;
             })
             .catch(function(err) {
                 bindSubmitBtn.disabled = true;
@@ -232,6 +308,12 @@
             return;
         }
 
+        if (!isValidPhone(normalizedPhone)) {
+            showMessage('휴대전화 번호는 01012345678 형식의 10~11자리 숫자로 입력해주세요.', false);
+            phone.focus();
+            return;
+        }
+
         if (!agreeCheckbox.checked) {
             showMessage('개인정보 이용 동의가 필요합니다.', false);
             return;
@@ -252,7 +334,10 @@
     // iframe/postMessage 결과 수신
     window.addEventListener('message', function(event) {
         var data = event && event.data;
+
         if (!data || typeof data !== 'object') return;
+        if (!isAllowedMessageOrigin(event.origin)) return;
+        if (event.source !== bindTargetIframe.contentWindow) return;
 
         if (data.success) {
             completeBindUI(data.task || {}, data.message || '연결이 완료되었습니다.');
@@ -267,6 +352,14 @@
 
     // 페이지 로드 후 이벤트 연결 및 초기 조회
     document.addEventListener('DOMContentLoaded', function() {
+        allowedMessageOrigins = (window.AppApi && typeof window.AppApi.getAllowedMessageOrigins === 'function')
+            ? window.AppApi.getAllowedMessageOrigins()
+            : [window.location.origin];
+
+        phone.addEventListener('input', function() {
+            phone.value = normalizeDigits(phone.value).slice(0, 11);
+        });
+
         bindForm.addEventListener('submit', handleSubmit);
         loadTaskInfo();
     });
