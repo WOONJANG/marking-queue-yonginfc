@@ -1,25 +1,28 @@
-: root {
-    --primary: #A6093D;
-    --primary - dark: #860733;
+/* =========================
+   01. 디자인 토큰
+========================= */
+:root {
+  --primary: #A6093D;
+  --primary-dark: #860733;
   --primary-soft: rgba(166, 9, 61, 0.12);
 
-  --secondary: # 5 BC2E7;
-    --secondary - dark: #2FA8D6;
+  --secondary: #5BC2E7;
+  --secondary-dark: #2FA8D6;
   --secondary-soft: rgba(91, 194, 231, 0.14);
 
-  --bg: # f4f7fb;
-    --card: rgba(255, 255, 255, 0.94);
-    --card - strong: #ffffff;
-    --text: #1f2937;
-  --muted: # 6 b7280;
-    --line: rgba(31, 41, 55, 0.08);
+  --bg: #f4f7fb;
+  --card: rgba(255, 255, 255, 0.94);
+  --card-strong: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: rgba(31, 41, 55, 0.08);
 
-    --success - bg: #dcfce7;
-    --success - text: #166534;
-  --warning-bg: # fff0c4;
-    --warning - text: #9a5d00;
-  --claim-bg: # d8f2fb;
-    --claim - text: #1175a4;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --warning-bg: #fff0c4;
+  --warning-text: #9a5d00;
+  --claim-bg: #d8f2fb;
+  --claim-text: #1175a4;
 
   --shadow-lg: 0 20px 44px rgba(22, 34, 51, 0.10);
   --shadow-md: 0 12px 28px rgba(22, 34, 51, 0.08);
@@ -31,6 +34,9 @@
   --radius-sm: 12px;
 }
 
+/* =========================
+   02. 기본 설정
+========================= */
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -50,1222 +56,1374 @@ body {
   background:
     radial-gradient(circle at top left, rgba(166, 9, 61, 0.10), transparent 32%),
     radial-gradient(circle at top right, rgba(91, 194, 231, 0.18), transparent 28%),
-    linear-gradient(180deg, # fffdfb 0 % , #f9fbff 42 % , #f3f7fc 100 % );
+    linear-gradient(180deg, #fffdfb 0%, #f9fbff 42%, #f3f7fc 100%);
 }
 
 body {
-    min - height: 100 dvh;
-    overflow - x: hidden;
+  min-height: 100dvh;
+  overflow-x: hidden;
 }
 
 img {
-    max - width: 100 % ;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
-img[src *= "emblem"],
-    img[alt *= "엠블럼"],
-    img[alt *= "Emblem"],
-    .emblem - image {
-        display: block;
-        margin - left: auto;
-        margin - right: auto;
-    }
-
-    .brand - shell {
-        position: fixed;
-        inset: 0;
-        pointer - events: none;
-        z - index: 0;
-    }
-
-    .brand - grid {
-        position: absolute;
-        inset: 0;
-        opacity: .18;
-        background - image: linear - gradient(rgba(166, 9, 61, .06) 1 px, transparent 1 px),
-        linear - gradient(90 deg, rgba(91, 194, 231, .06) 1 px, transparent 1 px);
-        background - size: 24 px 24 px;
-        mask - image: linear - gradient(to bottom, rgba(0, 0, 0, .72), rgba(0, 0, 0, .12));
-    }
-
-    .wrap,
-    .bind - wrap {
-        position: relative;
-        z - index: 1;
-    }
-
-    .wrap {
-        max - width: 1180 px;
-        margin: 0 auto;
-        padding: 16 px;
-    }
-
-    /* HERO */
-    .hero {
-        position: relative;
-        overflow: hidden;
-        border - radius: var (--radius - xl);
-        padding: 22 px 22 px;
-        margin - bottom: 14 px;
-        color: #fff;
-        box - shadow: 0 18 px 36 px rgba(166, 9, 61, 0.16);
-        background: linear - gradient(
-            135 deg,
-            rgba(166, 9, 61, .96) 0 % ,
-            rgba(166, 9, 61, .90) 48 % ,
-            rgba(91, 194, 231, .84) 100 %
-        );
-    }
-
-    .hero::before {
-        content: "";
-        position: absolute;
-        right: -42 px;
-        top: -42 px;
-        width: 180 px;
-        height: 180 px;
-        border - radius: 50 % ;
-        background: rgba(255, 255, 255, .12);
-    }
-
-    .hero::after {
-        content: "";
-        position: absolute;
-        left: -44 px;
-        bottom: -74 px;
-        width: 170 px;
-        height: 170 px;
-        border - radius: 50 % ;
-        background: rgba(255, 255, 255, .07);
-    }
-
-    .hero - inner {
-        position: relative;
-        z - index: 1;
-        display: grid;
-        grid - template - columns: minmax(0, 1 fr) minmax(140 px, 200 px);
-        gap: 16 px;
-        align - items: center;
-    }
-
-    .hero - copy {
-        min - width: 0;
-    }
-
-    .hero - mark {
-        display: flex;
-        justify - content: center;
-        align - items: center;
-    }
-
-    .hero - mark img {
-        width: min(100 % , 176 px);
-        filter: drop - shadow(0 12 px 24 px rgba(0, 0, 0, .16));
-        transform: translateY(2 px);
-    }
-
-    .brand - badge,
-    .bind - badge {
-        display: inline - flex;
-        align - items: center;
-        gap: 8 px;
-        padding: 6 px 12 px;
-        border - radius: 999 px;
-        background: rgba(255, 255, 255, 0.16);
-        border: 1 px solid rgba(255, 255, 255, 0.22);
-        font - size: 11 px;
-        font - weight: 900;
-        letter - spacing: .08 em;
-        text - transform: uppercase;
-        margin - bottom: 8 px;
-    }
-
-    .brand - dot {
-        width: 8 px;
-        height: 8 px;
-        border - radius: 50 % ;
-        background: #fff;
-    }
-
-h1 {
-    margin: 0;
-    font - size: clamp(28 px, 4 vw, 34 px);
-    line - height: 1.08;
-    letter - spacing: -.03 em;
+img[src*="emblem"],
+img[alt*="엠블럼"],
+img[alt*="Emblem"],
+.emblem-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.sub {
-    margin - top: 8 px;
-    font - size: 14 px;
-    line - height: 1.6;
-    color: rgba(255, 255, 255, .94);
-}
-
-.hero - side,
-    .hero - actions {
-        display: flex;
-        gap: 8 px;
-        flex - wrap: wrap;
-        align - items: center;
-    }
-
-    .hero - side {
-        justify - content: flex - end;
-    }
-
-    .hero - link {
-        display: inline - flex;
-        text - decoration: none;
-    }
-
-    .hero - chip {
-        display: inline - flex;
-        align - items: center;
-        justify - content: center;
-        min - height: 42 px;
-        min - width: 112 px;
-        padding: 0 14 px;
-        border - radius: 14 px;
-        background: rgba(255, 255, 255, .14);
-        border: 1 px solid rgba(255, 255, 255, .18);
-        color: #fff;
-        text - decoration: none;
-        font - size: 13 px;
-        font - weight: 800;
-        white - space: nowrap;
-        backdrop - filter: blur(8 px);
-        transition: transform .18 s ease,
-        box - shadow .18 s ease,
-        background - color .18 s ease;
-    }
-
-    .hero - chip - soft {
-        opacity: .95;
-    }
-
-    .hero - chip: hover {
-        transform: translateY(-1 px);
-        background: rgba(255, 255, 255, .18);
-        box - shadow: 0 8 px 18 px rgba(0, 0, 0, .12);
-    }
-
-    /* CARD */
-    .card {
-        background: var (--card);
-        border: 1 px solid rgba(255, 255, 255, .74);
-        border - radius: var (--radius - xl);
-        padding: 18 px;
-        margin - bottom: 14 px;
-        box - shadow: var (--shadow - lg);
-        backdrop - filter: blur(12 px);
-    }
-
-    .topbar {
-        display: flex;
-        justify - content: space - between;
-        gap: 14 px;
-        flex - wrap: wrap;
-        align - items: end;
-    }
-
-    .section - title {
-        margin: 0;
-        font - size: 20 px;
-        font - weight: 900;
-        letter - spacing: -.02 em;
-    }
-
-    .section - sub {
-        margin - top: 6 px;
-        color: var (--muted);
-        font - size: 13 px;
-        line - height: 1.5;
-    }
-
-    /* SEARCH */
-    .search {
-        display: flex;
-        gap: 10 px;
-        flex - wrap: wrap;
-        align - items: stretch;
-        width: min(560 px, 100 % );
-    }
-
-    .search - box {
-        flex: 1 1 280 px;
-        min - width: 0;
-    }
-
-    .search - label,
-    .field label {
-        display: block;
-        margin - bottom: 8 px;
-        font - size: 13 px;
-        font - weight: 900;
-        color: var (--text);
-    }
-
-    .search - box input,
-    .bind - form input: not([type = "checkbox"]): not([type = "hidden"]) {
-        width: 100 % ;
-        min - height: 52 px;
-        border: 1 px solid rgba(31, 41, 55, 0.11);
-        border - radius: 14 px;
-        padding: 0 14 px;
-        background: rgba(255, 255, 255, .96);
-        color: var (--text);
-        outline: none;
-        font - size: 15 px;
-        transition: border - color .18 s ease,
-        box - shadow .18 s ease,
-        transform .15 s ease;
-    }
-
-    .search - box input: focus,
-    .bind - form input: not([type = "checkbox"]): not([type = "hidden"]): focus {
-        border - color: rgba(91, 194, 231, .92);
-        box - shadow: 0 0 0 4 px rgba(91, 194, 231, .16);
-        background: #fff;
-    }
-
-button,
-.primary - btn,
-    .ghost - btn,
-    .btn - primary {
-        min - height: 52 px;
-        border: 0;
-        border - radius: 14 px;
-        padding: 0 16 px;
-        font - size: 14 px;
-        font - weight: 900;
-        cursor: pointer;
-        transition: transform .15 s ease, box - shadow .20 s ease, opacity .20 s ease;
-    }
-
-button: hover,
-    .primary - btn: hover,
-    .ghost - btn: hover,
-    .btn - primary: hover {
-        transform: translateY(-1 px);
-    }
-
-button: active,
-    .primary - btn: active,
-    .ghost - btn: active,
-    .btn - primary: active {
-        transform: translateY(0);
-    }
-
-button: disabled,
-    .primary - btn: disabled,
-    .ghost - btn: disabled,
-    .btn - primary: disabled {
-        opacity: .55;
-        cursor: not - allowed;
-        transform: none;
-    }
-
-    .primary - btn,
-    .btn - primary {
-        background: linear - gradient(135 deg,
-            var (--primary) 0 % , #c10f4b 100 % );
-        color: #fff;
-        box - shadow: 0 12 px 22 px rgba(166, 9, 61, .18);
-    }
-
-    .ghost - btn {
-        background: rgba(17, 24, 39, .08);
-        color: var (--text);
-    }
-
-    /* RECENT SEARCH */
-    .quick - row {
-        display: flex;
-        gap: 10 px;
-        align - items: center;
-        flex - wrap: wrap;
-        margin - top: 14 px;
-    }
-
-    .quick - hint {
-        color: var (--muted);
-        font - size: 12 px;
-        font - weight: 800;
-        white - space: nowrap;
-    }
-
-    .recent - searches {
-        display: flex;
-        flex - wrap: wrap;
-        gap: 8 px;
-    }
-
-    .recent - chip {
-        min - height: 34 px;
-        padding: 0 12 px;
-        border - radius: 999 px;
-        border: 1 px solid
-        var (--line);
-        background: rgba(255, 255, 255, .90);
-        color: var (--text);
-        font - size: 12 px;
-        font - weight: 800;
-        cursor: pointer;
-        transition: transform .15 s ease, box - shadow .18 s ease, border - color .18 s ease;
-    }
-
-    .recent - chip: hover {
-        transform: translateY(-1 px);
-        box - shadow: var (--shadow - sm);
-    }
-
-    .recent - chip.is - empty {
-        cursor: default;
-        opacity: .7;
-    }
-
-    /* DASHBOARD */
-    .stats,
-    .stats - grid {
-        display: grid;
-        grid - template - columns: repeat(4, minmax(0, 1 fr));
-        gap: 12 px;
-        margin - top: 14 px;
-    }
-
-    .stat,
-    .stat - card {
-        background: rgba(255, 255, 255, .92);
-        border: 1 px solid
-        var (--line);
-        border - radius: 20 px;
-        padding: 16 px;
-        box - shadow: var (--shadow - md);
-        transition: transform .18 s ease,
-        box - shadow .18 s ease;
-        min - width: 0;
-    }
-
-    .stat: hover,
-    .stat - card: hover {
-        transform: translateY(-2 px);
-        box - shadow: var (--shadow - lg);
-    }
-
-    .stat.total,
-    .stat - card.total {
-        background: linear - gradient(180 deg, rgba(166, 9, 61, 0.04), rgba(166, 9, 61, 0.01)),
-        rgba(255, 255, 255, .94);
-    }
-
-    .stat.waiting,
-    .stat - card.waiting {
-        background: linear - gradient(180 deg, rgba(255, 193, 7, 0.06), rgba(255, 193, 7, 0.02)),
-        rgba(255, 255, 255, .94);
-    }
-
-    .stat.done,
-    .stat - card.done,
-    .stat.complete,
-    .stat - card.complete {
-        background: linear - gradient(180 deg, rgba(22, 163, 74, 0.06), rgba(22, 163, 74, 0.02)),
-        rgba(255, 255, 255, .94);
-    }
-
-    .stat.bound,
-    .stat - card.bound {
-        background: linear - gradient(180 deg, rgba(91, 194, 231, 0.08), rgba(91, 194, 231, 0.03)),
-        rgba(255, 255, 255, .94);
-    }
-
-    .stat - label {
-        color: var (--muted);
-        font - size: 13 px;
-        font - weight: 800;
-        line - height: 1.25;
-    }
-
-    .stat b,
-    .stat - value {
-        display: block;
-        margin - top: 8 px;
-        font - size: clamp(22 px, 4 vw, 28 px);
-        font - weight: 900;
-        letter - spacing: -.03 em;
-        color: var (--primary);
-    }
-
-    /* FILTER */
-    .filter - bar {
-        display: grid;
-        grid - template - columns: repeat(3, minmax(0, 1 fr));
-        gap: 8 px;
-        margin - top: 14 px;
-    }
-
-    .filter - btn {
-        width: 100 % ;
-        min - width: 0;
-        min - height: 44 px;
-        padding: 0 12 px;
-        border - radius: 999 px;
-        border: 1 px solid
-        var (--line);
-        background: #fff;
-        color: var (--text);
-        font - size: 14 px;
-        font - weight: 900;
-        white - space: nowrap;
-    }
-
-    .filter - btn.active {
-        background: linear - gradient(135 deg,
-            var (--primary) 0 % , #c10f4b 100 % );
-        color: #fff;
-        border - color: var (--primary);
-        box - shadow: 0 10 px 20 px rgba(166, 9, 61, .16);
-    }
-
-    /* META / UPDATE */
-    .meta - row,
-    .updated {
-        display: flex;
-        justify - content: space - between;
-        gap: 10 px;
-        flex - wrap: wrap;
-        align - items: center;
-        color: var (--muted);
-        font - size: 12 px;
-        margin - top: 12 px;
-    }
-
-    .pulse {
-        width: 8 px;
-        height: 8 px;
-        border - radius: 50 % ;
-        background: var (--secondary);
-        box - shadow: 0 0 0 0 rgba(91, 194, 231, .45);
-        animation: pulseDot 1.8 s infinite;
-        display: inline - block;
-        margin - right: 6 px;
-    }
-
-    .sync - note {
-        margin - top: 10 px;
-        color: var (--muted);
-        font - size: 12 px;
-        line - height: 1.5;
-    }
-
-    .hidden {
-        display: none!important;
-    }
-
-    /* SUMMARY */
-    .summary - card {
-        transition: opacity .2 s ease,
-        transform .2 s ease;
-    }
-
-    .summary - head {
-        display: flex;
-        justify - content: space - between;
-        gap: 12 px;
-        align - items: start;
-        flex - wrap: wrap;
-    }
-
-    .summary - kicker {
-        color: var (--secondary - dark);
-        font - size: 12 px;
-        font - weight: 900;
-        letter - spacing: .08 em;
-        text - transform: uppercase;
-    }
-
-    .summary - title {
-        margin: 6 px 0 0;
-        font - size: 24 px;
-        letter - spacing: -.03 em;
-    }
-
-    .summary - grid {
-        display: grid;
-        grid - template - columns: repeat(4, minmax(0, 1 fr));
-        gap: 10 px;
-        margin - top: 16 px;
-    }
-
-    .summary - box {
-        border: 1 px solid
-        var (--line);
-        background: rgba(255, 255, 255, .88);
-        border - radius: 18 px;
-        padding: 14 px 12 px;
-        box - shadow: var (--shadow - md);
-        min - width: 0;
-    }
-
-    .summary - label {
-        display: block;
-        color: var (--muted);
-        font - size: 12 px;
-        font - weight: 800;
-        line - height: 1.25;
-        word - break: keep - all;
-    }
-
-    .summary - value {
-        display: block;
-        margin - top: 8 px;
-        font - size: 18 px;
-        font - weight: 900;
-        line - height: 1.2;
-        word - break: break -word;
-    }
-
-    .summary - message,
-    .foot - note {
-        margin - top: 14 px;
-        padding: 14 px 16 px;
-        border - radius: 16 px;
-        background: rgba(91, 194, 231, .12);
-        color: var (--text);
-        line - height: 1.65;
-        border: 1 px solid rgba(91, 194, 231, .18);
-        font - size: 14 px;
-    }
-
-    .badge,
-    .state - chip,
-    .claim - chip {
-        display: inline - flex;
-        align - items: center;
-        min - height: 30 px;
-        border - radius: 999 px;
-        padding: 0 10 px;
-        font - size: 12 px;
-        font - weight: 900;
-    }
-
-    .state - complete,
-    .badge.complete,
-    .badge.done {
-        background: var (--success - bg);
-        color: var (--success - text);
-    }
-
-    .state - waiting,
-    .badge.waiting {
-        background: var (--warning - bg);
-        color: var (--warning - text);
-    }
-
-    .claim - bound {
-        background: var (--claim - bg);
-        color: var (--claim - text);
-    }
-
-    .claim - none {
-        background: #f3f4f6;
-        color: #4b5563;
+.hidden {
+  display: none !important;
 }
 
 .muted {
   color: var(--muted);
 }
 
-/* TABLE */
+/* =========================
+   03. 배경 / 레이아웃
+========================= */
+.brand-shell {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.brand-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(166, 9, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 194, 231, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.12));
+}
+
+.wrap,
+.bind-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* =========================
+   04. 히어로
+========================= */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  padding: 22px;
+  margin-bottom: 14px;
+  color: #fff;
+  box-shadow: 0 18px 36px rgba(166, 9, 61, 0.16);
+  background: linear-gradient(
+    135deg,
+    rgba(166, 9, 61, 0.96) 0%,
+    rgba(166, 9, 61, 0.90) 48%,
+    rgba(91, 194, 231, 0.84) 100%
+  );
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  right: -42px;
+  top: -42px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  left: -44px;
+  bottom: -74px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 200px);
+  gap: 16px;
+  align-items: center;
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.hero-mark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-mark img {
+  width: min(100%, 176px);
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.16));
+  transform: translateY(2px);
+}
+
+.brand-badge,
+.bind-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.sub {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.hero-side,
+.hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.hero-side {
+  justify-content: flex-end;
+}
+
+.hero-link {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  min-width: 112px;
+  padding: 0 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.hero-chip-soft {
+  opacity: 0.95;
+}
+
+.hero-chip:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   05. 카드 공통
+========================= */
+.card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(12px);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.section-sub {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================
+   06. 검색 영역
+========================= */
+.search {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: min(560px, 100%);
+}
+
+.search-box {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.search-label,
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.search-box input,
+.bind-form input:not([type="checkbox"]):not([type="hidden"]) {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid rgba(31, 41, 55, 0.11);
+  border-radius: 14px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--text);
+  outline: none;
+  font-size: 15px;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.15s ease;
+}
+
+.search-box input:focus,
+.bind-form input:not([type="checkbox"]):not([type="hidden"]):focus {
+  border-color: rgba(91, 194, 231, 0.92);
+  box-shadow: 0 0 0 4px rgba(91, 194, 231, 0.16);
+  background: #fff;
+}
+
+/* =========================
+   07. 버튼
+========================= */
+button,
+.primary-btn,
+.ghost-btn,
+.btn-primary {
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.20s ease,
+    opacity 0.20s ease;
+}
+
+button:hover,
+.primary-btn:hover,
+.ghost-btn:hover,
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+button:active,
+.primary-btn:active,
+.ghost-btn:active,
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+button:disabled,
+.primary-btn:disabled,
+.ghost-btn:disabled,
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primary-btn,
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, #c10f4b 100%);
+  color: #fff;
+  box-shadow: 0 12px 22px rgba(166, 9, 61, 0.18);
+}
+
+.ghost-btn {
+  background: rgba(17, 24, 39, 0.08);
+  color: var(--text);
+}
+
+/* =========================
+   08. 최근 검색
+========================= */
+.quick-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.quick-hint {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.recent-searches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recent-chip {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.90);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.recent-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.recent-chip.is-empty {
+  cursor: default;
+  opacity: 0.7;
+}
+
+/* =========================
+   09. 통계 카드
+========================= */
+.stats,
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.stat,
+.stat-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  min-width: 0;
+}
+
+.stat:hover,
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat.total,
+.stat-card.total {
+  background:
+    linear-gradient(180deg, rgba(166, 9, 61, 0.04), rgba(166, 9, 61, 0.01)),
+    rgba(255, 255, 255, 0.94);
+}
+
+.stat.waiting,
+.stat-card.waiting {
+  background:
+    linear-gradient(180deg, rgba(255, 193, 7, 0.06), rgba(255, 193, 7, 0.02)),
+    rgba(255, 255, 255, 0.94);
+}
+
+.stat.done,
+.stat-card.done,
+.stat.complete,
+.stat-card.complete {
+  background:
+    linear-gradient(180deg, rgba(22, 163, 74, 0.06), rgba(22, 163, 74, 0.02)),
+    rgba(255, 255, 255, 0.94);
+}
+
+.stat.bound,
+.stat-card.bound {
+  background:
+    linear-gradient(180deg, rgba(91, 194, 231, 0.08), rgba(91, 194, 231, 0.03)),
+    rgba(255, 255, 255, 0.94);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.stat b,
+.stat-value {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(22px, 4vw, 28px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--primary);
+}
+
+/* =========================
+   10. 필터
+========================= */
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.filter-btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--primary) 0%, #c10f4b 100%);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 10px 20px rgba(166, 9, 61, 0.16);
+}
+
+/* =========================
+   11. 메타 / 갱신
+========================= */
+.meta-row,
+.updated {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--secondary);
+  box-shadow: 0 0 0 0 rgba(91, 194, 231, 0.45);
+  animation: pulseDot 1.8s infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.sync-note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================
+   12. 요약 카드
+========================= */
+.summary-card {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.summary-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.summary-kicker {
+  color: var(--secondary-dark);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.summary-title {
+  margin: 6px 0 0;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.summary-box {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 18px;
+  padding: 14px 12px;
+  box-shadow: var(--shadow-md);
+  min-width: 0;
+}
+
+.summary-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+  word-break: keep-all;
+}
+
+.summary-value {
+  display: block;
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.summary-message,
+.foot-note {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(91, 194, 231, 0.12);
+  color: var(--text);
+  line-height: 1.65;
+  border: 1px solid rgba(91, 194, 231, 0.18);
+  font-size: 14px;
+}
+
+/* =========================
+   13. 상태 배지
+========================= */
+.badge,
+.state-chip,
+.claim-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.state-complete,
+.badge.complete,
+.badge.done {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.state-waiting,
+.badge.waiting {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.claim-bound {
+  background: var(--claim-bg);
+  color: var(--claim-text);
+}
+
+.claim-none {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* =========================
+   14. 테이블
+========================= */
 .table-wrap {
   overflow: auto;
   margin-top: 4px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: # fff;
-        scrollbar - width: thin;
-    }
+  background: #fff;
+  scrollbar-width: thin;
+}
 
-    .table - wrap::-webkit - scrollbar {
-        height: 10 px;
-    }
+.table-wrap::-webkit-scrollbar {
+  height: 10px;
+}
 
-    .table - wrap::-webkit - scrollbar - thumb {
-        background: rgba(166, 9, 61, .22);
-        border - radius: 999 px;
-    }
+.table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(166, 9, 61, 0.22);
+  border-radius: 999px;
+}
 
 table {
-    width: 100 % ;
-    min - width: 760 px;
-    border - collapse: collapse;
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
 }
 
 th,
 td {
-    padding: 13 px 12 px;
-    border - bottom: 1 px solid
-    var (--line);
-    text - align: left;
-    font - size: 14 px;
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 14px;
 }
 
 th {
-    color: var (--muted);
-    font - size: 12 px;
-    background: #fafbfc;
+  color: var(--muted);
+  font-size: 12px;
+  background: #fafbfc;
 }
 
-.td - empty {
-        text - align: center;
-    }
-
-    /* MOBILE LIST */
-    .mobile - list {
-        display: none;
-        gap: 12 px;
-        margin - top: 14 px;
-    }
-
-    .mobile - item {
-        border: 1 px solid
-        var (--line);
-        border - radius: 18 px;
-        padding: 14 px;
-        background: rgba(255, 255, 255, .94);
-        box - shadow: var (--shadow - md);
-    }
-
-    .mobile - item h3 {
-        margin: 0 0 10 px;
-        font - size: 30 px;
-    }
-
-    .mobile - meta {
-        display: grid;
-        gap: 8 px;
-        color: var (--muted);
-        font - size: 14 px;
-    }
-
-    /* BIND */
-    .bind - wrap {
-        min - height: 100 dvh;
-        display: grid;
-        place - items: center;
-        padding: 18 px;
-    }
-
-    .bind - card {
-        width: min(100 % , 660 px);
-        padding: 24 px;
-    }
-
-    .bind - card.sub {
-        color: var (--muted);
-    }
-
-    .bind - head {
-        display: grid;
-        grid - template - columns: minmax(0, 1 fr) 116 px;
-        gap: 16 px;
-        align - items: center;
-    }
-
-    .bind - emblem {
-        display: flex;
-        justify - content: center;
-        align - items: center;
-    }
-
-    .bind - emblem img {
-        width: 100 % ;
-        max - width: 112 px;
-        filter: drop - shadow(0 10 px 22 px rgba(166, 9, 61, .14));
-    }
-
-    .info - box {
-        border: 1 px solid
-        var (--line);
-        border - radius: 18 px;
-        padding: 14 px;
-        background: rgba(255, 255, 255, .92);
-        line - height: 1.7;
-        margin - top: 16 px;
-        display: grid;
-        gap: 8 px;
-    }
-
-    .bind - form {
-        margin - top: 18 px;
-    }
-
-    .field {
-        margin - bottom: 14 px;
-    }
-
-    .agree {
-        display: flex;
-        width: 100 % ;
-        gap: 12 px;
-        align - items: flex - start;
-        margin - top: 16 px;
-        line - height: 1.6;
-        font - size: 14 px;
-    }
-
-    .agree input[type = "checkbox"] {
-        width: 22 px;
-        height: 22 px;
-        min - width: 22 px;
-        min - height: 22 px;
-        margin: 2 px 0 0;
-        padding: 0;
-        flex: 0 0 22 px;
-        border - radius: 6 px;
-        accent - color: var (--primary);
-    }
-
-    .agree span {
-        flex: 1 1 auto;
-        min - width: 0;
-        word - break: keep - all;
-        overflow - wrap: break -word;
-    }
-
-    .actions {
-        margin - top: 16 px;
-        display: flex;
-        gap: 10 px;
-        flex - wrap: wrap;
-    }
-
-    .msg {
-        margin - top: 12 px;
-        min - height: 20 px;
-        font - size: 14 px;
-        font - weight: 800;
-    }
-
-    .msg.ok {
-        color: var (--success - text);
-    }
-
-    .msg.err {
-        color: #b91c1c;
-    }
-
-    .bind - help {
-        color: var (--muted);
-    }
-
-    .hidden - iframe {
-        width: 0;
-        height: 0;
-        border: 0;
-        position: absolute;
-        left: -9999 px;
-    }
-
-    /* FOOTER */
-    .footer {
-        margin - top: 18 px;
-        padding: 18 px 12 px 10 px;
-        text - align: center;
-        color: var (--muted);
-        font - size: 13 px;
-        line - height: 1.6;
-    }
-
-    .admin - trigger {
-        display: inline;
-        font - weight: 900;
-        color: inherit;
-        cursor: pointer;
-        user - select: none;
-        text - decoration: none;
-        background: transparent;
-        border: 0;
-        padding: 0;
-    }
-
-    .admin - trigger: hover {
-        opacity: .72;
-    }
-
-    .admin - trigger: focus - visible {
-        outline: none;
-        text - decoration: underline;
-        text - underline - offset: 3 px;
-    }
-
-/* RESPONSIVE */
-@media(max - width: 980 px) {
-    .hero - inner {
-            grid - template - columns: 1 fr;
-        }
-
-        .hero - side,
-        .hero - actions {
-            justify - content: flex - start;
-        }
-
-        .hero - mark {
-            justify - content: center;
-        }
-
-        .summary - grid {
-            grid - template - columns: repeat(4, minmax(0, 1 fr));
-            gap: 8 px;
-        }
-
-        .summary - box {
-            padding: 12 px 10 px;
-            border - radius: 16 px;
-        }
-
-        .summary - label {
-            font - size: 11 px;
-        }
-
-        .summary - value {
-            font - size: 16 px;
-        }
+.td-empty {
+  text-align: center;
 }
 
-@media(max - width: 760 px) {
-    .wrap {
-        padding: 12 px;
-    }
-
-    .search,
-    .actions {
-        flex - direction: column;
-        align - items: stretch;
-    }
-
-    .hero - side,
-        .hero - actions {
-            width: 100 % ;
-            display: grid;
-            grid - template - columns: repeat(3, minmax(0, 1 fr));
-            gap: 8 px;
-            align - items: stretch;
-            justify - content: initial;
-        }
-
-        .hero - link,
-        .hero - chip {
-            width: 100 % ;
-            min - width: 0;
-        }
-
-        .hero - chip {
-            min - height: 48 px;
-            padding: 0 8 px;
-            font - size: 12 px;
-            border - radius: 12 px;
-        }
-
-        .primary - btn,
-        .ghost - btn,
-        .btn - primary {
-            width: 100 % ;
-            min - height: 54 px;
-            font - size: 15 px;
-        }
-
-        .filter - bar {
-            grid - template - columns: repeat(3, minmax(0, 1 fr));
-            gap: 8 px;
-        }
-
-        .filter - btn {
-            width: 100 % ;
-            min - width: 0;
-            min - height: 48 px;
-            font - size: 13 px;
-            padding: 0 8 px;
-        }
-
-        .search - box input,
-        .bind - form input: not([type = "checkbox"]): not([type = "hidden"]) {
-            min - height: 54 px;
-            font - size: 16 px;
-        }
-
-        .summary - grid {
-            grid - template - columns: repeat(4, minmax(0, 1 fr));
-            gap: 8 px;
-        }
-
-        .summary - box {
-            padding: 10 px 8 px;
-            border - radius: 16 px;
-        }
-
-        .summary - label {
-            font - size: 10 px;
-            line - height: 1.2;
-        }
-
-        .summary - value {
-            margin - top: 6 px;
-            font - size: 15 px;
-        }
-
-        .stats,
-        .stats - grid {
-            gap: 8 px;
-        }
-
-        .stat,
-        .stat - card {
-            padding: 12 px 10 px;
-            border - radius: 16 px;
-        }
-
-        .stat - label {
-            font - size: 11 px;
-            line - height: 1.2;
-            word -
-                break :keep - all;
-        }
-
-        .stat b,
-        .stat - value {
-            margin - top: 6 px;
-            font - size: clamp(18 px, 4.8 vw, 22 px);
-        }
-
-        .table - wrap {
-            display: none;
-        }
-
-        .mobile - list {
-            display: grid;
-        }
-
-        .bind - head {
-            grid - template - columns: 1 fr;
-        }
-
-        .bind - emblem {
-            justify - content: center;
-            text - align: center;
-        }
-
-        .agree {
-            gap: 10 px;
-            font - size: 13 px;
-        }
-
-        .agree input[type = "checkbox"] {
-            width: 20 px;
-            height: 20 px;
-            min - width: 20 px;
-            min - height: 20 px;
-            flex - basis: 20 px;
-        }
+/* =========================
+   15. 모바일 리스트
+========================= */
+.mobile-list {
+  display: none;
+  gap: 12px;
+  margin-top: 14px;
 }
 
-@media(max - width: 420 px) {
-    .stats,
-    .stats - grid {
-            gap: 6 px;
-        }
-
-        .stat,
-        .stat - card {
-            padding: 10 px 8 px;
-        }
-
-        .stat - label {
-            font - size: 10 px;
-        }
-
-        .stat b,
-        .stat - value {
-            font - size: 18 px;
-        }
-
-        .hero - side,
-        .hero - actions {
-            gap: 6 px;
-        }
-
-        .hero - chip {
-            min - height: 44 px;
-            font - size: 11 px;
-            padding: 0 6 px;
-        }
-
-        .filter - bar {
-            gap: 6 px;
-        }
-
-        .filter - btn {
-            min - height: 44 px;
-            font - size: 12 px;
-            padding: 0 6 px;
-        }
-
-        .summary - grid {
-            gap: 6 px;
-        }
-
-        .summary - box {
-            padding: 8 px 6 px;
-        }
-
-        .summary - label {
-            font - size: 9 px;
-        }
-
-        .summary - value {
-            font - size: 13 px;
-        }
+.mobile-item {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-md);
 }
 
-/* MOTION */
+.mobile-item h3 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+
+.mobile-meta {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* =========================
+   16. 바인드 페이지
+========================= */
+.bind-wrap {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.bind-card {
+  width: min(100%, 660px);
+  padding: 24px;
+}
+
+.bind-card.sub {
+  color: var(--muted);
+}
+
+.bind-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 116px;
+  gap: 16px;
+  align-items: center;
+}
+
+.bind-emblem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bind-emblem img {
+  width: 100%;
+  max-width: 112px;
+  filter: drop-shadow(0 10px 22px rgba(166, 9, 61, 0.14));
+}
+
+.info-box {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  line-height: 1.7;
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.bind-form {
+  margin-top: 18px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.agree {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 16px;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.agree input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  margin: 2px 0 0;
+  padding: 0;
+  flex: 0 0 22px;
+  border-radius: 6px;
+  accent-color: var(--primary);
+}
+
+.agree span {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.msg {
+  margin-top: 12px;
+  min-height: 20px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.msg.ok {
+  color: var(--success-text);
+}
+
+.msg.err {
+  color: #b91c1c;
+}
+
+.bind-help {
+  color: var(--muted);
+}
+
+.hidden-iframe {
+  width: 0;
+  height: 0;
+  border: 0;
+  position: absolute;
+  left: -9999px;
+}
+
+/* =========================
+   17. 푸터
+========================= */
+.footer {
+  margin-top: 18px;
+  padding: 18px 12px 10px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.admin-trigger {
+  display: inline;
+  font-weight: 900;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.admin-trigger:hover {
+  opacity: 0.72;
+}
+
+.admin-trigger:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* =========================
+   18. 태블릿 보정
+========================= */
+@media (max-width: 980px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-side,
+  .hero-actions {
+    justify-content: flex-start;
+  }
+
+  .hero-mark {
+    justify-content: center;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .summary-box {
+    padding: 12px 10px;
+    border-radius: 16px;
+  }
+
+  .summary-label {
+    font-size: 11px;
+  }
+
+  .summary-value {
+    font-size: 16px;
+  }
+}
+
+/* =========================
+   19. 761~846px 폭 보정
+   - 가로 스크롤 방지
+   - 카드 잘림 방지
+========================= */
+@media (min-width: 761px) and (max-width: 846px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .wrap {
+    max-width: 100%;
+    padding: 12px;
+  }
+
+  .card {
+    padding: 14px;
+    overflow: hidden;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-box {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .search-box input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .hero-side,
+  .hero-actions {
+    justify-content: flex-start;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hero-link,
+  .hero-chip {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-chip {
+    padding: 0 10px;
+    text-align: center;
+    white-space: normal;
+    word-break: keep-all;
+  }
+
+  .stats,
+  .stats-grid,
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat,
+  .stat-card,
+  .summary-box {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .stat-label,
+  .summary-label,
+  .summary-value,
+  .section-sub,
+  .sub,
+  .mobile-meta,
+  td,
+  th {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: keep-all;
+  }
+
+  .summary-value,
+  .stat-value,
+  .stat b {
+    line-height: 1.25;
+  }
+
+  .table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    min-width: 100%;
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  td {
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+/* =========================
+   20. 모바일
+========================= */
+@media (max-width: 760px) {
+  .wrap {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 14px;
+    margin-bottom: 10px;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  .topbar {
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .section-sub,
+  .sub {
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .search,
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search {
+    width: 100%;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .search-box {
+    flex: 1 1 auto;
+  }
+
+  .search-box input,
+  .bind-form input:not([type="checkbox"]):not([type="hidden"]) {
+    min-height: 50px;
+    font-size: 15px;
+  }
+
+  .hero-side,
+  .hero-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    align-items: stretch;
+    justify-content: initial;
+  }
+
+  .hero-link,
+  .hero-chip {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-chip {
+    min-height: 48px;
+    padding: 0 8px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+
+  .primary-btn,
+  .ghost-btn,
+  .btn-primary,
+  button {
+    width: 100%;
+    min-height: 50px;
+    font-size: 14px;
+  }
+
+  .filter-bar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .filter-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    font-size: 13px;
+    padding: 0 8px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .summary-box {
+    padding: 10px 8px;
+    border-radius: 16px;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  .summary-label {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .summary-value {
+    margin-top: 6px;
+    font-size: 15px;
+  }
+
+  .stats,
+  .stats-grid {
+    gap: 8px;
+  }
+
+  .stat,
+  .stat-card {
+    padding: 12px 10px;
+    border-radius: 16px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    line-height: 1.2;
+    word-break: keep-all;
+  }
+
+  .stat b,
+  .stat-value {
+    margin-top: 6px;
+    font-size: clamp(18px, 4.8vw, 22px);
+  }
+
+  .table-wrap {
+    display: none;
+  }
+
+  .mobile-list {
+    display: grid;
+  }
+
+  .bind-head {
+    grid-template-columns: 1fr;
+  }
+
+  .bind-emblem {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .agree {
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .agree input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    flex-basis: 20px;
+  }
+
+  .stats,
+  .stats-grid,
+  .filter-bar,
+  .summary-grid,
+  .meta-row,
+  .updated,
+  .quick-row {
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  .summary-card,
+  .mobile-item,
+  .foot-note {
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  .card,
+  .summary-card,
+  .mobile-item,
+  .search,
+  .topbar {
+    align-content: start;
+    justify-content: flex-start;
+  }
+
+  .summary-card:empty,
+  .mobile-list:empty,
+  .table-wrap:empty,
+  .quick-row:empty {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* =========================
+   21. 초소형 모바일
+========================= */
+@media (max-width: 420px) {
+  .wrap {
+    padding: 8px;
+  }
+
+  .card {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .section-title {
+    font-size: 17px;
+  }
+
+  .search-box input,
+  .bind-form input:not([type="checkbox"]):not([type="hidden"]) {
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  .primary-btn,
+  .ghost-btn,
+  .btn-primary,
+  button {
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  .stats,
+  .stats-grid {
+    gap: 6px;
+  }
+
+  .stat,
+  .stat-card {
+    padding: 10px 8px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat b,
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .hero-side,
+  .hero-actions {
+    gap: 6px;
+  }
+
+  .hero-chip {
+    min-height: 44px;
+    font-size: 11px;
+    padding: 0 6px;
+  }
+
+  .filter-bar {
+    gap: 6px;
+  }
+
+  .filter-btn {
+    min-height: 44px;
+    font-size: 12px;
+    padding: 0 6px;
+  }
+
+  .summary-grid {
+    gap: 6px;
+  }
+
+  .summary-box {
+    padding: 8px 6px;
+  }
+
+  .summary-label {
+    font-size: 9px;
+  }
+
+  .summary-value {
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   22. 모션 최소화
+========================= */
 @keyframes pulseDot {
-    0 % {
-        box - shadow: 0 0 0 0 rgba(91, 194, 231, .45);
-    }
-    70 % {
-        box - shadow: 0 0 0 9 px rgba(91, 194, 231, 0);
-    }
-    100 % {
-        box - shadow: 0 0 0 0 rgba(91, 194, 231, 0);
-    }
+  0% {
+    box-shadow: 0 0 0 0 rgba(91, 194, 231, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(91, 194, 231, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(91, 194, 231, 0);
+  }
 }
 
-@media(prefers - reduced - motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation: none!important;
-        transition: none!important;
-        scroll - behavior: auto!important;
-    }
-}
-
-@media(max - width: 760 px) {
-    .wrap {
-        padding: 10 px;
-    }
-
-    .card {
-        padding: 14 px;
-        margin - bottom: 10 px;
-        min - height: auto!important;
-        height: auto!important;
-    }
-
-    .topbar {
-        gap: 10 px;
-        align - items: stretch;
-    }
-
-    .section - title {
-            font - size: 18 px;
-        }
-
-        .section - sub,
-        .sub {
-            margin - top: 4 px;
-            font - size: 13 px;
-            line - height: 1.45;
-        }
-
-        .search {
-            width: 100 % ;
-            gap: 8 px;
-            margin - top: 8 px;
-        }
-
-        .search - box {
-            flex: 1 1 auto;
-        }
-
-        .search - box input,
-        .bind - form input: not([type = "checkbox"]): not([type = "hidden"]) {
-            min - height: 50 px;
-            font - size: 15 px;
-        }
-
-        .primary - btn,
-        .ghost - btn,
-        .btn - primary,
-        button {
-            min - height: 50 px;
-        }
-
-        .stats,
-        .stats - grid,
-        .filter - bar,
-        .summary - grid,
-        .meta - row,
-        .updated,
-        .quick - row {
-            margin - top: 10 px;
-            gap: 8 px;
-        }
-
-        .summary - card,
-        .summary - box,
-        .foot - note,
-        .mobile - item {
-            min - height: auto!important;
-            height: auto!important;
-        }
-
-        /* 혹시 부모가 flex/grid로 세로 공간을 억지로 벌리는 경우 방지 */
-        .card,
-        .summary - card,
-        .mobile - item,
-        .search,
-        .topbar {
-            align - content: start;
-            justify - content: flex - start;
-        }
-
-        /* 비어 있는 결과 영역이 높이만 차지하는 경우 방지 */
-        .summary - card: empty,
-        .mobile - list: empty,
-        .table - wrap: empty,
-        .quick - row: empty {
-            display: none!important;
-            margin: 0!important;
-            padding: 0!important;
-        }
-}
-
-@media(max - width: 420 px) {
-    .wrap {
-        padding: 8 px;
-    }
-
-    .card {
-        padding: 12 px;
-        border - radius: 18 px;
-    }
-
-    .section - title {
-            font - size: 17 px;
-        }
-
-        .search - box input,
-        .bind - form input: not([type = "checkbox"]): not([type = "hidden"]) {
-            min - height: 48 px;
-            font - size: 14 px;
-        }
-
-        .primary - btn,
-        .ghost - btn,
-        .btn - primary,
-        button {
-            min - height: 48 px;
-            font - size: 14 px;
-        }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
