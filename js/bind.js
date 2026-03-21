@@ -1,4 +1,7 @@
 (function() {
+    /* =========================
+       01. DOM 참조 / 상태값
+       ========================= */
     var tokenField = document.getElementById('tokenField');
     var phone = document.getElementById('phone');
     var agreeCheckbox = document.getElementById('agreeCheckbox');
@@ -14,14 +17,25 @@
     var bindPollingStartedAt = 0;
     var bindCompleted = false;
 
+    /* =========================
+       02. 공통 유틸
+       ========================= */
+
+    // 숫자만 남기기
     function normalizeDigits(value) {
         return String(value == null ? '' : value).replace(/\D/g, '');
     }
 
+    // 토큰 문자열 정리
     function normalizeToken(value) {
         return String(value == null ? '' : value).trim().replace(/[^A-Za-z0-9_-]/g, '');
     }
 
+    /* =========================
+       03. 토큰 처리
+       ========================= */
+
+    // URL 또는 sessionStorage에서 바인드 토큰 가져오기
     function getToken() {
         var params = new URLSearchParams(location.search);
         var fromUrl = normalizeToken(params.get('k') || params.get('token') || '');
@@ -36,17 +50,24 @@
         return token;
     }
 
+    /* =========================
+       04. UI 출력
+       ========================= */
+
+    // 안내 메시지 표시
     function showMessage(text, ok) {
         bindMsg.textContent = text || '';
         bindMsg.className = 'msg' + (text ? ' ' + (ok ? 'ok' : 'err') : '');
     }
 
+    // 작업 정보 표시
     function applyTaskInfo(task) {
         infoWorkNo.textContent = '#' + (task.workNo || '-');
         infoStatus.textContent = task.status || '-';
         infoClaim.textContent = task.claimStatus || '-';
     }
 
+    // 이미 연결된 작업인지 확인
     function isBoundTask(task) {
         if (!task) return false;
         return (
@@ -56,6 +77,11 @@
         );
     }
 
+    /* =========================
+       05. 폴링 제어
+       ========================= */
+
+    // 폴링 중지
     function stopBindPolling() {
         if (bindPollingTimer) {
             clearInterval(bindPollingTimer);
@@ -63,6 +89,11 @@
         }
     }
 
+    /* =========================
+       06. 완료 / 실패 처리
+       ========================= */
+
+    // 연결 완료 후 공개 페이지로 이동
     function goToPublicPage(workNo) {
         var q = encodeURIComponent(String(workNo || ''));
         setTimeout(function() {
@@ -70,6 +101,7 @@
         }, 800);
     }
 
+    // 연결 완료 UI 처리
     function completeBindUI(task, message) {
         bindCompleted = true;
         stopBindPolling();
@@ -81,12 +113,18 @@
         }
     }
 
+    // 연결 실패 UI 처리
     function failBindUI(message) {
         stopBindPolling();
         showMessage(message || '연결에 실패했습니다.', false);
         bindSubmitBtn.disabled = false;
     }
 
+    /* =========================
+       07. 작업 정보 조회
+       ========================= */
+
+    // 현재 토큰 기준 작업 정보 조회
     function fetchTaskInfo() {
         var token = getToken();
         if (!token) {
@@ -98,6 +136,11 @@
         });
     }
 
+    /* =========================
+       08. 바인드 상태 폴링
+       ========================= */
+
+    // 연결 완료 여부를 주기적으로 확인
     function startBindPolling() {
         stopBindPolling();
         bindPollingStartedAt = Date.now();
@@ -128,6 +171,11 @@
         }, 800);
     }
 
+    /* =========================
+       09. 초기 작업 정보 로드
+       ========================= */
+
+    // 페이지 진입 시 작업 상태 먼저 확인
     function loadTaskInfo() {
         var token = getToken();
         if (!token) {
@@ -158,6 +206,11 @@
             });
     }
 
+    /* =========================
+       10. 제출 처리
+       ========================= */
+
+    // 폼 제출 전 값 정리 및 검증
     function handleSubmit(e) {
         e.preventDefault();
 
@@ -192,6 +245,11 @@
         startBindPolling();
     }
 
+    /* =========================
+       11. 외부 응답 수신
+       ========================= */
+
+    // iframe/postMessage 결과 수신
     window.addEventListener('message', function(event) {
         var data = event && event.data;
         if (!data || typeof data !== 'object') return;
@@ -203,6 +261,11 @@
         }
     });
 
+    /* =========================
+       12. 초기 실행
+       ========================= */
+
+    // 페이지 로드 후 이벤트 연결 및 초기 조회
     document.addEventListener('DOMContentLoaded', function() {
         bindForm.addEventListener('submit', handleSubmit);
         loadTaskInfo();
