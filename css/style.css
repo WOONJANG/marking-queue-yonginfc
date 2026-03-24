@@ -1402,10 +1402,99 @@ th {
     font-size: 13px;
   }
 }
-.kakao-float-btn { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 9999; display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 18px; border-radius: 999px; background: #FEE500; color: #191919; text-decoration: none; font-weight: 700; font-size: 15px; line-height: 1; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18); transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; } .kakao-float-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22); } .kakao-float-btn:active { transform: translateY(0); } .kakao-float-icon { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; } .kakao-float-icon svg { width: 100%; height: 100%; display: block; } .kakao-float-text { white-space: nowrap; } @media (max-width: 768px) { .kakao-float-btn { right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); min-height: 52px; padding: 0 16px; font-size: 14px; } } .kakao-float-btn--circle { width: 60px; height: 60px; padding: 0; border-radius: 50%; justify-content: center; } .kakao-float-btn--circle .kakao-float-text { display: none; }
+/* =========================
+   22. 카카오톡 플로팅 버튼
+========================= */
+.kakao-float-btn {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: 999px;
+
+  background: #FEE500;
+  color: #191919;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.kakao-float-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+}
+
+.kakao-float-btn:active {
+  transform: translateY(0);
+}
+
+.kakao-float-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.kakao-float-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.kakao-float-text {
+  white-space: nowrap;
+}
+
+.kakao-float-btn--circle {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  min-height: 60px;
+  padding: 0;
+  border-radius: 50%;
+  justify-content: center;
+}
+
+.kakao-float-btn--circle .kakao-float-text {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .kakao-float-btn {
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    min-height: 52px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .kakao-float-btn--circle {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+  }
+}
 
 /* =========================
-   22. 모션 최소화
+   23. 모션 최소화
 ========================= */
 @keyframes pulseDot {
   0% {
