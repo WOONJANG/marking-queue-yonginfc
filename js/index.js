@@ -23,6 +23,12 @@
     var statBound = document.getElementById('statBound');
 
     var allItemsCache = [];
+    var baseStatsCache = {
+        total: 0,
+        waiting: 0,
+        completed: 0,
+        bound: 0
+    };
     var lastUpdatedAt = '-';
     var refreshTimer = null;
     var serverSearchTimer = null;
@@ -217,6 +223,20 @@
         if (statBound) statBound.textContent = String(stats.bound || 0);
     }
 
+    function setBaseStats(stats) {
+        baseStatsCache = stats || {
+            total: 0,
+            waiting: 0,
+            completed: 0,
+            bound: 0
+        };
+        renderStats(baseStatsCache);
+    }
+
+    function renderBaseStats() {
+        renderStats(baseStatsCache);
+    }
+
     /* =========================
        05. 상태 필터
        ========================= */
@@ -299,7 +319,7 @@
         var items = getLocalWorkNoItems(q);
 
         render(items);
-        renderStats(buildStatsFromItems(items));
+        renderBaseStats();
         updatedAt.textContent = '업데이트: ' + lastUpdatedAt;
         syncNote.textContent = '작업번호 로컬 검색 · 데이터 자동 갱신 10초';
     }
@@ -343,7 +363,7 @@
 
                 allItemsCache = sortByWorkNoAsc(res.items || []);
                 lastUpdatedAt = res.updatedAt || '-';
-                renderStats(res.stats || buildStatsFromItems(allItemsCache));
+                setBaseStats(res.stats || buildStatsFromItems(allItemsCache));
 
                 if (currentMode === 'workNo') {
                     applyLocalWorkNoSearch();
@@ -379,7 +399,7 @@
                     throw new Error((res && res.message) || '검색 결과를 불러오지 못했습니다.');
                 }
 
-                renderStats(res.stats || buildStatsFromItems(res.items || []));
+                renderBaseStats();
                 render(res.items || []);
                 updatedAt.textContent = '업데이트: ' + (res.updatedAt || '-');
                 syncNote.textContent = (mode === 'name' ? '이름' : '전화번호') + ' 서버 검색 · 데이터 자동 갱신 10초';
@@ -414,7 +434,7 @@
                 }
 
                 var mergedItems = mergeItemsByWorkNo(localItems, res.items || []);
-                renderStats(buildStatsFromItems(mergedItems));
+                renderBaseStats();
                 render(mergedItems);
                 updatedAt.textContent = '업데이트: ' + (res.updatedAt || lastUpdatedAt || '-');
                 syncNote.textContent = '4자리 작업번호 + 전화번호 동시 검색 · 데이터 자동 갱신 10초';
