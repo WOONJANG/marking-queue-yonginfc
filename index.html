@@ -53,7 +53,62 @@
                 </div>
             </div>
 
-            <div id="markingClosedNotice" class="marking-closed-notice hidden" aria-live="polite">금일 마킹 작업 마감</div>
+            <div id="markingClosedNotice" class="marking-closed-notice hidden" aria-live="polite">금일 마킹 작업이 마감되었습니다ㅁ!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#A6093D">
+    <title>용인FC 미르스토어 마킹 실시간</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="brand-shell">
+        <div class="brand-grid"></div>
+    </div>
+
+    <div class="wrap">
+        <section class="hero hero-public">
+            <div class="hero-inner">
+                <div class="hero-copy">
+                    <div class="brand-badge"><span class="brand-dot"></span> YONGIN FC MIREU STORE</div>
+                    <h1>마킹 실시간 현황</h1>
+                    <p class="sub">
+                        작업번호, 이름, 전화번호로 조회할 수 있습니다.<br>
+                        작업번호는 로컬 검색으로 빠르게 , 이름과 전화번호는 서버 검색으로 서버시간에 따라 시간이 지연될 수 있습니다.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="https://www.yonginfc.co.kr/" class="hero-chip" target="_blank" rel="noopener noreferrer">용인 FC</a>
+                        <a href="https://www.yonginfcstore.com/" class="hero-chip" target="_blank" rel="noopener noreferrer">미르스토어</a>
+                        <span class="hero-chip hero-chip-soft" id="autoRefreshLabel">10초 자동 동기화</span>
+                    </div>
+                </div>
+                <div class="hero-mark">
+                    <img src="./assets/emblem.png" alt="용인FC 엠블럼" class="emblem-image">
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="topbar">
+                <div>
+                    <h2 class="section-title">작업 조회</h2>
+                    <div class="section-sub">작업번호 / 이름 / 전화번호를 하나의 검색창에서 조회할 수 있습니다.</div>
+                </div>
+
+                <div class="search search-single">
+                    <div class="search-box search-main-box">
+                        <label for="searchInput" class="search-label">검색</label>
+                        <input id="searchInput" type="search" placeholder="작업번호, 이름, 전화번호 입력" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+                    </div>
+                    <button id="searchBtn" class="primary-btn" type="button">검색</button>
+                    <button id="refreshBtn" class="ghost-btn" type="button">새로고침</button>
+                </div>
+            </div>
+
+            <div id="markingClosedNotice" class="marking-closed-notice hidden" aria-live="polite"> &#8251; 금일 마킹 작업이 마감되었습니다. &#8251;</div>
 
             <div class="stats-grid">
                 <article class="stat-card">
