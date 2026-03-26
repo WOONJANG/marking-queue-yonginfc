@@ -21,6 +21,7 @@
     var statWaiting = document.getElementById('statWaiting');
     var statDone = document.getElementById('statDone');
     var statBound = document.getElementById('statBound');
+    var markingClosedNotice = document.getElementById('markingClosedNotice');
 
     var allItemsCache = [];
     var baseStatsCache = {
@@ -30,6 +31,7 @@
         bound: 0
     };
     var lastUpdatedAt = '-';
+    var markingClosedCache = false;
     var refreshTimer = null;
     var serverSearchTimer = null;
     var currentMode = 'workNo';
@@ -237,6 +239,13 @@
         renderStats(baseStatsCache);
     }
 
+    function renderMarkingClosedNotice(isClosed) {
+        markingClosedCache = !!isClosed;
+
+        if (!markingClosedNotice) return;
+        markingClosedNotice.classList.toggle('hidden', !markingClosedCache);
+    }
+
     /* =========================
        05. 상태 필터
        ========================= */
@@ -364,6 +373,7 @@
                 allItemsCache = sortByWorkNoAsc(res.items || []);
                 lastUpdatedAt = res.updatedAt || '-';
                 setBaseStats(res.stats || buildStatsFromItems(allItemsCache));
+                renderMarkingClosedNotice(!!res.markingClosed);
 
                 if (currentMode === 'workNo') {
                     applyLocalWorkNoSearch();
@@ -400,6 +410,7 @@
                 }
 
                 renderBaseStats();
+                renderMarkingClosedNotice(!!res.markingClosed);
                 render(res.items || []);
                 updatedAt.textContent = '업데이트: ' + (res.updatedAt || '-');
                 syncNote.textContent = (mode === 'name' ? '이름' : '전화번호') + ' 서버 검색 · 데이터 자동 갱신 10초';
@@ -435,6 +446,7 @@
 
                 var mergedItems = mergeItemsByWorkNo(localItems, res.items || []);
                 renderBaseStats();
+                renderMarkingClosedNotice(!!res.markingClosed);
                 render(mergedItems);
                 updatedAt.textContent = '업데이트: ' + (res.updatedAt || lastUpdatedAt || '-');
                 syncNote.textContent = '4자리 작업번호 + 전화번호 동시 검색 · 데이터 자동 갱신 10초';
