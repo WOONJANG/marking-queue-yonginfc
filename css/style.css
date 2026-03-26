@@ -538,6 +538,38 @@ button:disabled,
 }
 
 /* =========================
+   09-1. 마감 안내
+========================= */
+.marking-closed-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 14px 18px;
+  margin-top: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(166, 9, 61, 0.16);
+  background: linear-gradient(135deg, rgba(166, 9, 61, 0.12) 0%, rgba(166, 9, 61, 0.05) 100%);
+  box-shadow: var(--shadow-md);
+  color: var(--primary);
+  font-size: clamp(18px, 3vw, 22px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.marking-closed-notice::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 8px rgba(166, 9, 61, 0.10);
+  flex: 0 0 10px;
+}
+
+/* =========================
    10. 필터
 ========================= */
 .filter-bar {
@@ -964,6 +996,12 @@ th {
     gap: 8px;
   }
 
+  .marking-closed-notice {
+    min-height: 54px;
+    padding: 12px 14px;
+    font-size: 17px;
+  }
+
   .summary-box {
     padding: 12px 10px;
     border-radius: 16px;
@@ -1206,6 +1244,12 @@ th {
   .summary-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
+  }
+
+  .marking-closed-notice {
+    min-height: 54px;
+    padding: 12px 14px;
+    font-size: 17px;
   }
 
   .summary-box {
